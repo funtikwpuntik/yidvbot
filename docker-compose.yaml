@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "${REDIS_EXTERNAL_PORT}:${REDIS_PORT}"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - tg_youtube
+
+  delete_service:
+    build: ./delete_service
+    image: delete_service:1.0
+    restart: always
+    volumes:
+      - /network_disk/media:/app/media
+      - /opt/tg_youtube_v2/logs:/app/log
+      - /opt/tg_youtube_v2/redis_client:/app/redis_client
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - tg_youtube
+
+  merge_service:
+    build: ./merge_service
+    image: merge_service:1.0
+    restart: always
+    volumes:
+      - /network_disk/media:/app/media
+      - /opt/tg_youtube_v2/logs:/app/log
+      - /opt/tg_youtube_v2/redis_client:/app/redis_client
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - tg_youtube
+
+  tg_ans_service:
+    build: ./tg_ans_service
+    image: tg_ans_service:1.0
+    restart: always
+    volumes:
+      - /network_disk/media:/app/media
+      - /opt/tg_youtube_v2/logs:/app/log
+      - /opt/tg_youtube_v2/redis_client:/app/redis_client
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - tg_youtube
+
+  tg_bot_service:
+    build: ./tg_bot_service
+    image: tg_bot_service:1.0
+    restart: always
+    extra_hosts:
+      - "xray-host:host-gateway"
+    volumes:
+      - /network_disk/media:/app/media
+      - /opt/tg_youtube_v2/logs:/app/log
+      - /opt/tg_youtube_v2/redis_client:/app/redis_client
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - tg_youtube
+
+  download_service:
+    build: ./download_service
+    image: download_service:1.0
+    restart: always
+    extra_hosts:
+      - "xray-host:host-gateway"
+    volumes:
+      - /network_disk/media:/app/media
+      - /opt/tg_youtube_v2/logs:/app/log
+      - /opt/tg_youtube_v2/redis_client:/app/redis_client
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - tg_youtube
+
+  upload_service:
+    build: ./upload_service
+    image: upload_service:1.0
+    restart: always
+    volumes:
+      - /network_disk/media:/app/media
+      - /opt/tg_youtube_v2/logs:/app/log
+      - /opt/tg_youtube_v2/redis_client:/app/redis_client
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - tg_youtube
+
+
+  translate_service:
+    build: ./translate_service
+    image: translate_service:1.0
+    restart: always
+    volumes:
+      - /network_disk/media:/app/media
+      - /opt/tg_youtube_v2/logs:/app/log
+      - /opt/tg_youtube_v2/redis_client:/app/redis_client
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - tg_youtube
+
+networks:
+  tg_youtube:
+    name: tg_youtube

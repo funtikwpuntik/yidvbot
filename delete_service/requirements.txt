@@ -1,0 +1,6 @@
+colorama==0.4.6
+hiredis==3.2.1
+loguru==0.7.3
+redis==6.4.0
+win32_setctime==1.2.0
+python-dotenv==1.0.1
