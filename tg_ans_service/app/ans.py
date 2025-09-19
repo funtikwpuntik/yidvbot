@@ -18,7 +18,7 @@ async def ans_tg(ans_data: dict):
                     inline_message_id=ans_data.get("message_id"), request_timeout=1)
             case 'video':
                 media = types.InputMediaVideo(media=ans_data.get("file_id"))
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.1)
                 await bot.edit_message_media(media=media,
                                              inline_message_id=ans_data.get("message_id"), request_timeout=1)
 
@@ -28,7 +28,7 @@ async def ans_tg(ans_data: dict):
 
             case 'audio':
                 media = types.InputMediaAudio(media=ans_data.get("file_id"))
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.1)
 
                 await bot.edit_message_media(media=media,
                                              inline_message_id=ans_data.get("message_id"), request_timeout=1)
