@@ -1,8 +1,10 @@
 import asyncio
+
+from aiogram.exceptions import TelegramNetworkError
+
 from redis_client import r
 import json
 from logger import logger
-
 from ans import ans_tg
 
 def main():
@@ -17,7 +19,8 @@ def main():
             a = asyncio.run(ans_tg(msg_dict))
             if not a:
                 raise Exception("Ошибка при ответном сообщении")
-
+        except TelegramNetworkError:
+            r.lpush('answer', msg)
         except Exception as ex:
 
             value = {

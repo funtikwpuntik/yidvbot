@@ -31,7 +31,7 @@ async def upload(filename: str, height: int, width: int, duration: int, title: s
             if (current / total) * 100 - last_percent >= 8 or (current / total) * 100 == 100:
                 r.lpush('answer', json.dumps({
                     "message_id": message_id,
-                    "text": f"Загрузка видео в тг.\nНазвание: {title}\nПрогресс: {0}%",
+                    "text": f"Загрузка видео в тг.\nНазвание: {title}\nПрогресс: {last_percent}%",
                     "method": "text"
                 }, ensure_ascii=False))
                 last_percent = (current / total) * 100
