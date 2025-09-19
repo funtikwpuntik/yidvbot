@@ -20,7 +20,7 @@ def main():
             if not a:
                 raise Exception("Ошибка при ответном сообщении")
         except TelegramNetworkError:
-            r.lpush('answer', msg)
+            r.lpush('answer', msg[1])
         except Exception as ex:
 
             value = {
